@@ -248,6 +248,7 @@ public partial class DevFlowAgentService : IDisposable, IMarkerPublisher
                     ["menus"] = IsMenusSupported,
                     ["theme"] = IsThemeSupported,
                     ["mutationLease"] = _options.RequireMutationLease,
+                    ["syntheticTouch"] = IsSyntheticTouchSupported,
                 },
                 ["running"] = IsAppBound,
                 // Current navigation route (null for backends without a router). Powers the
@@ -286,6 +287,12 @@ public partial class DevFlowAgentService : IDisposable, IMarkerPublisher
 
     /// <summary>Whether the backend can inspect and invoke application menus.</summary>
     protected virtual bool IsMenusSupported => false;
+
+    /// <summary>
+    /// Whether gestures can be delivered as synthesised touches to raw-touch views. Only a
+    /// backend that implements the tier (iOS and Mac Catalyst) reports the opt-in option.
+    /// </summary>
+    protected virtual bool IsSyntheticTouchSupported => false;
 
     /// <summary>
     /// Reason surfaced to clients when a capability group is unavailable.
