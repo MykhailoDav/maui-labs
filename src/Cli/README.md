@@ -295,6 +295,24 @@ maui devflow storage files download logs/app.log --output ./downloads/
 maui devflow storage files download logs/app.log --output ./downloads/app-copy.log
 ```
 
+DevFlow WebView DOM and input helpers accept `--webview` (or `-w`) to select a
+WebView by index, AutomationId, or element ID; omitting it selects the first
+WebView. The `cdp` alias accepts the same options. The target is sent with the
+request, not inserted into the generated JavaScript:
+
+```bash
+maui devflow webview webviews
+maui devflow webview --webview Right DOM querySelector "#name"
+maui devflow webview -w Right snapshot
+maui devflow webview -w Right Input fill "#name" "Hello"
+maui devflow webview -w Right Input dispatchClickEvent "#submit"
+maui devflow webview -w Right Input insertText "More text"
+```
+
+`fill` sets the matching field's value and dispatches input/change events;
+`insertText` inserts at the cursor in the selected WebView. These DOM helpers
+are separate from native `ui query --selector` and MCP `maui_query_css`.
+
 ## Global Options
 
 | Option | Description |
@@ -445,6 +463,13 @@ For Inspector reconnect behavior, control handoff, and XAML workspace recovery, 
 | Linux | ✅ | Android commands |
 
 ## Development
+
+DevFlow command registration, argument validation, presentation, exit codes, and batch
+parser re-entry live in `DevFlowCommands`. Internal instance operations under the
+`DevFlow/Operations/` directory own native UI, WebView/CDP, storage/device, streaming, theme,
+extensions, capture/recording, host alerts/permissions, and broker/discovery execution.
+Command-side helpers prepare and own agent connections; operations borrow clients and
+do not dispose them. Stream cancellation subscriptions and rendering stay at the CLI boundary.
 
 ```bash
 # Open just the CLI in your IDE
